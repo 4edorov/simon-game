@@ -23,6 +23,10 @@ class App extends Component {
             </div>
           </div>
         </div>
+        <div className='frame-in-cycle'>
+          <div className='table-cycle'>
+          </div>
+        </div>
       </div>
     );
   }
