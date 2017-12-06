@@ -23,7 +23,7 @@
   width: 650px;
   height: 650px;
   margin: auto;
-  background: silver;
+  background: DimGrey;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -33,16 +33,22 @@
 .frame-in-cycle {
   width: 350px;
   height: 350px;
-  position: inherit;
-  background: silver;
+  background: DimGrey;
   border-radius: 50%;
+  position: absolute;
 }
 
 .table-cycle {
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   background: CornflowerBlue;
   border-radius: 50%;
+  top: 25px;
+  left: 25px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .square {
@@ -93,4 +99,8 @@
   background: yellow;
   border-bottom-right-radius: 100%;
   margin-left: 10px;
+}
+
+.special-symbols {
+  font-size: 1.3rem;
 }
