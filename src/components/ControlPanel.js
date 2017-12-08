@@ -13,7 +13,17 @@ const styles = {
   },
   row2: {
     display: 'flex',
+    justifyContent: 'space-around',
+  },
+  row2El: {
+    display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center'
+  },
+  row3: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
   }
 }
 
@@ -30,23 +40,22 @@ class ControlPanel extends Component {
           </h1>
         </div>
         <div style={styles.row2}>
-          <div>
+          <div style={styles.row2El}>
             <Well></Well>
             <h3><Label>Count</Label></h3>
           </div>
-          <div>
+          <div style={styles.row2El}>
             <Button bsStyle='danger' />
             <h3><Label>Start</Label></h3>
           </div>
-          <div>
+          <div style={styles.row2El}>
             <Button bsStyle='warning' />
             <h3><Label>Strict</Label></h3>
           </div>
         </div>
-        <div>
-          <div>
-            <Checkbox />
-          </div>
+        <div style={styles.row3}>
+          <Checkbox />
+          <h3><Label>On/Off</Label></h3>
         </div>
       </div>
     )
