@@ -2,7 +2,14 @@ import React, { Component } from 'react'
 import ControlPanel from './ControlPanel'
 
 class PlayField extends Component {
+  handleButton = (e) => {
+    console.log('e', e)
+    this.props.onHandleTopLeftButton(1)
+  }
+
   render() {
+    console.log('props', this.props)
+
     return (
       <div className='app'>
         <div className='main-cycle'>
@@ -12,7 +19,7 @@ class PlayField extends Component {
             </div>
             <div className='square'>
               <div className='top-part'>
-                <div className='top-left'>
+                <div className='top-left' onMouseDown={this.handleButton}>
                 </div>
                 <div className='top-right'>
                 </div>
