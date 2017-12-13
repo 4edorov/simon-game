@@ -2,32 +2,80 @@ import React, { Component } from 'react'
 import ControlPanel from './ControlPanel'
 
 class PlayField extends Component {
-  handleButton = (e) => {
-    console.log('e', e)
-    this.props.onHandleTopLeftButton(1)
+  handleOnMouseDownButton = (e) => {
+    switch (e.target.className) {
+      case 'top-left off':
+        this.props.onHandleTopLeftButton(1)
+        break
+      case 'top-right off':
+        this.props.onHandleTopRightButton(1)
+        break
+      case 'bottom-left off':
+        this.props.onHandleBottomLeftButton(1)
+        break
+      case 'bottom-right off':
+        this.props.onHandleBottomRightButton(1)
+        break
+      default:
+        return
+    }
+  }
+  handleOnMouseUpButton = (e) => {
+    switch (e.target.className) {
+      case 'top-left on':
+        this.props.onHandleTopLeftButton(0)
+        break
+      case 'top-right on':
+        this.props.onHandleTopRightButton(0)
+        break
+      case 'bottom-left on':
+        this.props.onHandleBottomLeftButton(0)
+        break
+      case 'bottom-right on':
+        this.props.onHandleBottomRightButton(0)
+        break
+      default:
+        return
+    }
   }
 
   render() {
-    console.log('props', this.props)
-
     return (
       <div className='app'>
         <div className='main-cycle'>
           <div className='frame-cycle'>
             <div className='frame-in-cycle'>
-              <ControlPanel />
+              <ControlPanel
+                count={this.props.count}
+              />
             </div>
             <div className='square'>
               <div className='top-part'>
-                <div className='top-left' onMouseDown={this.handleButton}>
+                <div
+                  className={this.props.topLeftState ? 'top-left on' : 'top-left off'}
+                  onMouseDown={this.handleOnMouseDownButton}
+                  onMouseUp={this.handleOnMouseUpButton}
+                >
                 </div>
-                <div className='top-right'>
+                <div
+                  className={this.props.topRightState ? 'top-right on' : 'top-right off'}
+                  onMouseDown={this.handleOnMouseDownButton}
+                  onMouseUp={this.handleOnMouseUpButton}
+                >
                 </div>
               </div>
               <div className='bottom-part'>
-                <div className='bottom-left'>
+                <div
+                  className={this.props.bottomLeftState ? 'bottom-left on' : 'bottom-left off'}
+                  onMouseDown={this.handleOnMouseDownButton}
+                  onMouseUp={this.handleOnMouseUpButton}
+                >
                 </div>
-                <div className='bottom-right'>
+                <div
+                  className={this.props.bottomRightState ? 'bottom-right on' : 'bottom-right off'}
+                  onMouseDown={this.handleOnMouseDownButton}
+                  onMouseUp={this.handleOnMouseUpButton}
+                >
                 </div>
               </div>
             </div>
