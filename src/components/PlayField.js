@@ -47,6 +47,7 @@ class PlayField extends Component {
             <div className='frame-in-cycle'>
               <ControlPanel
                 count={this.props.count}
+                playSequences={this.props.playSequences}
               />
             </div>
             <div className='square'>

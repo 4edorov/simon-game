@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import PlayField from './components/PlayField'
 import './App.css'
+import {
+  sequences,
+  comparisons
+} from './libs/libs'
 
 class App extends Component {
   constructor(props) {
@@ -35,7 +39,23 @@ class App extends Component {
     })
   }
 
+  playSequences = () => {
+    sequences.forEach(sequence => {
+      sequence.forEach(one => {
+        this.setState({
+          handleTopLeft: 1
+        })
+        setTimeout(() => {
+          this.setState({
+            handleTopLeft: 0
+          })
+        }, 500)
+      })
+    })
+  }
+
   render() {
+    console.log('libs', sequences, comparisons)
     return (
       <PlayField
         onHandleTopLeftButton={this.handleTopLeftButton}
@@ -47,6 +67,7 @@ class App extends Component {
         bottomLeftState={this.state.handleBottomLeft}
         bottomRightState={this.state.handleBottomRight}
         count={this.state.count}
+        playSequences={this.playSequences}
       />
     )
   }
