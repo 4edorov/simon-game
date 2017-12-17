@@ -37,6 +37,10 @@ const styles = {
 }
 
 class ControlPanel extends Component {
+  handleStartButton = () => {
+    this.props.playSequences()
+  }
+
   render () {
     return (
       <div className='table-cycle'>
@@ -54,7 +58,9 @@ class ControlPanel extends Component {
             <h3><Label>Count</Label></h3>
           </div>
           <div style={styles.row2El}>
-            <Button bsStyle='danger' style={styles.btn} />
+            <Button bsStyle='danger' style={styles.btn}
+              onClick={this.handleStartButton}
+            />
             <h3><Label>Start</Label></h3>
           </div>
           <div style={styles.row2El}>

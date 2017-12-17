@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import PlayField from './components/PlayField'
 import './App.css'
+import {
+  sequences,
+  comparisons
+} from './libs/libs'
 
 class App extends Component {
   constructor(props) {
@@ -35,7 +39,41 @@ class App extends Component {
     })
   }
 
+  playSequences = () => {
+    const delay = () => {
+      return new Promise(resolve => setTimeout(resolve, 700))
+    }
+    const delayedLightOff = async item => {
+      await delay()
+      this.setState({
+        [item]: 0
+      })
+    }
+    const processSequence = async array => {
+      for (let el of array) {
+        await delay()
+        // console.log('sound', `sound${el}`)
+        // let audio = new Audio(`/assets/audio/simonSound${el}.mp3`)
+        el = comparisons[el]
+        this.setState({
+          [el]: 1
+        })
+        // await audio.play()
+        await delayedLightOff(el)
+      }
+    }
+    const processSequences = async sequences => {
+      for (let sequence of sequences) {
+        await delay()
+        await processSequence(sequence)
+      }
+    }
+
+    processSequences(sequences)
+  }
+
   render() {
+    console.log('libs', sequences, comparisons)
     return (
       <PlayField
         onHandleTopLeftButton={this.handleTopLeftButton}
@@ -47,6 +85,7 @@ class App extends Component {
         bottomLeftState={this.state.handleBottomLeft}
         bottomRightState={this.state.handleBottomRight}
         count={this.state.count}
+        playSequences={this.playSequences}
       />
     )
   }
