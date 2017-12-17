@@ -40,18 +40,36 @@ class App extends Component {
   }
 
   playSequences = () => {
-    sequences.forEach(sequence => {
-      sequence.forEach(one => {
-        this.setState({
-          handleTopLeft: 1
-        })
-        setTimeout(() => {
-          this.setState({
-            handleTopLeft: 0
-          })
-        }, 500)
+    const delay = () => {
+      return new Promise(resolve => setTimeout(resolve, 700))
+    }
+    const delayedLightOff = async item => {
+      await delay()
+      this.setState({
+        [item]: 0
       })
-    })
+    }
+    const processSequence = async array => {
+      for (let el of array) {
+        await delay()
+        // console.log('sound', `sound${el}`)
+        // let audio = new Audio(`/assets/audio/simonSound${el}.mp3`)
+        el = comparisons[el]
+        this.setState({
+          [el]: 1
+        })
+        // await audio.play()
+        await delayedLightOff(el)
+      }
+    }
+    const processSequences = async sequences => {
+      for (let sequence of sequences) {
+        await delay()
+        await processSequence(sequence)
+      }
+    }
+
+    processSequences(sequences)
   }
 
   render() {
