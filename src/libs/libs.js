@@ -1,3 +1,5 @@
+const simonSound0 = require('../assets/audio/simonSound0.mp3')
+
 const sequences = [
   ['0'],
   ['0', '3'],
@@ -12,7 +14,12 @@ const comparisons = {
   '3': 'handleBottomRight'
 }
 
+const audios = {
+  '0': simonSound0
+}
+
 module.exports = {
   sequences,
-  comparisons
+  comparisons,
+  audios
 }

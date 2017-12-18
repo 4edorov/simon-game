@@ -3,8 +3,15 @@ import PlayField from './components/PlayField'
 import './App.css'
 import {
   sequences,
-  comparisons
+  comparisons,
+  audios
 } from './libs/libs'
+
+const audioPlayButton = async numberButton => {
+  let audio = new Audio(audios[0])
+  audio.play()
+  console.log('audio', audio)
+}
 
 class App extends Component {
   constructor(props) {
@@ -18,22 +25,23 @@ class App extends Component {
     }
   }
 
-  handleTopLeftButton = (handleTopLeft) => {
+  handleTopLeftButton = handleTopLeft => {
+    audioPlayButton(0)
     this.setState({
       handleTopLeft: handleTopLeft
     })
   }
-  handleTopRightButton = (handleTopRight) => {
+  handleTopRightButton = handleTopRight => {
     this.setState({
       handleTopRight: handleTopRight
     })
   }
-  handleBottomLeftButton = (handleBottomLeft) => {
+  handleBottomLeftButton = handleBottomLeft => {
     this.setState({
       handleBottomLeft: handleBottomLeft
     })
   }
-  handleBottomRightButton = (handleBottomRight) => {
+  handleBottomRightButton = handleBottomRight => {
     this.setState({
       handleBottomRight: handleBottomRight
     })
@@ -52,13 +60,11 @@ class App extends Component {
     const processSequence = async array => {
       for (let el of array) {
         await delay()
-        // console.log('sound', `sound${el}`)
-        // let audio = new Audio(`/assets/audio/simonSound${el}.mp3`)
+        // audioPlayButton(el)
         el = comparisons[el]
         this.setState({
           [el]: 1
         })
-        // await audio.play()
         await delayedLightOff(el)
       }
     }
