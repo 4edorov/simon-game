@@ -6,6 +6,21 @@ import {
   comparisons
 } from './libs/libs'
 
+const audioContext = new (window.AudioContext || window.webkitAudioCOntext)()
+
+const createAudio = frequency => {
+  const oscillator = audioContext.createOscillator()
+  oscillator.type = 'square'
+  oscillator.frequency.value = frequency
+  oscillator.start()
+  return oscillator
+}
+
+const tl = createAudio(440)
+const tr = createAudio(340)
+const bl = createAudio(240)
+const br = createAudio(140)
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -18,22 +33,52 @@ class App extends Component {
     }
   }
 
-  handleTopLeftButton = (handleTopLeft) => {
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.handleTopLeft) {
+      tl.connect(audioContext.destination)
+    }
+    if (nextState.handleTopRight) {
+      tr.connect(audioContext.destination)
+    }
+    if (nextState.handleBottomLeft) {
+      bl.connect(audioContext.destination)
+    }
+    if (nextState.handleBottomRight) {
+      br.connect(audioContext.destination)
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.handleTopLeft) {
+      tl.disconnect(audioContext.destination)
+    }
+    if (prevState.handleTopRight) {
+      tr.disconnect(audioContext.destination)
+    }
+    if (prevState.handleBottomLeft) {
+      bl.disconnect(audioContext.destination)
+    }
+    if (prevState.handleBottomRight) {
+      br.disconnect(audioContext.destination)
+    }
+  }
+
+  handleTopLeftButton = handleTopLeft => {
     this.setState({
       handleTopLeft: handleTopLeft
     })
   }
-  handleTopRightButton = (handleTopRight) => {
+  handleTopRightButton = handleTopRight => {
     this.setState({
       handleTopRight: handleTopRight
     })
   }
-  handleBottomLeftButton = (handleBottomLeft) => {
+  handleBottomLeftButton = handleBottomLeft => {
     this.setState({
       handleBottomLeft: handleBottomLeft
     })
   }
-  handleBottomRightButton = (handleBottomRight) => {
+  handleBottomRightButton = handleBottomRight => {
     this.setState({
       handleBottomRight: handleBottomRight
     })
@@ -52,13 +97,10 @@ class App extends Component {
     const processSequence = async array => {
       for (let el of array) {
         await delay()
-        // console.log('sound', `sound${el}`)
-        // let audio = new Audio(`/assets/audio/simonSound${el}.mp3`)
         el = comparisons[el]
         this.setState({
           [el]: 1
         })
-        // await audio.play()
         await delayedLightOff(el)
       }
     }
@@ -73,7 +115,6 @@ class App extends Component {
   }
 
   render() {
-    console.log('libs', sequences, comparisons)
     return (
       <PlayField
         onHandleTopLeftButton={this.handleTopLeftButton}
