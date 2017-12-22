@@ -29,7 +29,8 @@ class App extends Component {
       handleTopRight: 0,
       handleBottomLeft: 0,
       handleBottomRight: 0,
-      count: 0
+      count: 0,
+      userSequence: []
     }
   }
 
@@ -67,21 +68,41 @@ class App extends Component {
     this.setState({
       handleTopLeft: handleTopLeft
     })
+    if (handleTopLeft) {
+      this.setState(prevState => ({
+        userSequence: [...prevState.userSequence, '0']
+      }))
+    }
   }
   handleTopRightButton = handleTopRight => {
     this.setState({
       handleTopRight: handleTopRight
     })
+    if (handleTopRight) {
+      this.setState(prevState => ({
+        userSequence: [...prevState.userSequence, '1']
+      }))
+    }
   }
   handleBottomLeftButton = handleBottomLeft => {
     this.setState({
       handleBottomLeft: handleBottomLeft
     })
+    if (handleBottomLeft) {
+      this.setState(prevState => ({
+        userSequence: [...prevState.userSequence, '2']
+      }))
+    }
   }
   handleBottomRightButton = handleBottomRight => {
     this.setState({
       handleBottomRight: handleBottomRight
     })
+    if (handleBottomRight) {
+      this.setState(prevState => ({
+        userSequence: [...prevState.userSequence, '3']
+      }))
+    }
   }
 
   playSequences = () => {
