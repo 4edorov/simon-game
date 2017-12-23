@@ -50,6 +50,8 @@ class PlayField extends Component {
                 playSequences={this.props.playSequences}
                 isGameOn={this.props.isGameOn}
                 onHandleGameSwitcher={this.props.onHandleGameSwitcher}
+                switchStrictMode={this.props.switchStrictMode}
+                isStrictMode={this.props.isStrictMode}
               />
             </div>
             <div className='square'>

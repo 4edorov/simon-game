@@ -33,7 +33,8 @@ class App extends Component {
       handleBottomRight: 0,
       count: 0,
       userSequence: [],
-      isGameOn: false
+      isGameOn: false,
+      isStrictMode: false
     }
   }
 
@@ -112,6 +113,18 @@ class App extends Component {
     this.setState({
       isGameOn: gameState
     })
+    if (!gameState) {
+      this.setState({
+        isStrictMode: false,
+        count: 0
+      })
+    }
+  }
+
+  handleSwitchStrictMode = () => {
+    this.setState(prevState => ({
+      isStrictMode: !prevState.isStrictMode
+    }))
   }
 
   playSequences = () => {
@@ -180,6 +193,8 @@ class App extends Component {
         playSequences={this.playSequences}
         isGameOn={this.state.isGameOn}
         onHandleGameSwitcher={this.handleGameSwitcher}
+        switchStrictMode={this.handleSwitchStrictMode}
+        isStrictMode={this.state.isStrictMode}
       />
     )
   }
