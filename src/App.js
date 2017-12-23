@@ -6,6 +6,8 @@ import {
   comparisons
 } from './libs/libs'
 
+const _ = require('lodash')
+
 const audioContext = new (window.AudioContext || window.webkitAudioCOntext)()
 
 const createAudio = frequency => {
@@ -30,7 +32,8 @@ class App extends Component {
       handleBottomLeft: 0,
       handleBottomRight: 0,
       count: 0,
-      userSequence: []
+      userSequence: [],
+      isGameOn: false
     }
   }
 
@@ -105,6 +108,12 @@ class App extends Component {
     }
   }
 
+  handleGameSwitcher = gameState => {
+    this.setState({
+      isGameOn: gameState
+    })
+  }
+
   playSequences = () => {
     const delay = time => {
       return new Promise(resolve => setTimeout(resolve, time))
@@ -125,8 +134,21 @@ class App extends Component {
         await delayedLightOff(el)
       }
     }
-    const waitForUserInput = async () => {
+    const waitForUserInput = async sequence => {
       await delay(7000)
+      if (_.isEqual(this.state.userSequence, sequence)) {
+        console.log('sequence is equal')
+        this.setState(prevState => ({
+          count: prevState.count + 1
+        }))
+      } else {
+        console.log('sequence is not equal')
+        this.setState({
+          userSequence: []
+        })
+        await processSequence(sequence)
+        await waitForUserInput(sequence)
+      }
     }
 
     const processSequences = async sequences => {
@@ -156,6 +178,8 @@ class App extends Component {
         bottomRightState={this.state.handleBottomRight}
         count={this.state.count}
         playSequences={this.playSequences}
+        isGameOn={this.state.isGameOn}
+        onHandleGameSwitcher={this.handleGameSwitcher}
       />
     )
   }
