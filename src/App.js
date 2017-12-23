@@ -16,10 +16,10 @@ const createAudio = frequency => {
   return oscillator
 }
 
-const tl = createAudio(440)
-const tr = createAudio(340)
-const bl = createAudio(240)
-const br = createAudio(140)
+const tl = createAudio(300)
+const tr = createAudio(250)
+const bl = createAudio(200)
+const br = createAudio(150)
 
 class App extends Component {
   constructor(props) {
@@ -106,18 +106,18 @@ class App extends Component {
   }
 
   playSequences = () => {
-    const delay = () => {
-      return new Promise(resolve => setTimeout(resolve, 700))
+    const delay = time => {
+      return new Promise(resolve => setTimeout(resolve, time))
     }
     const delayedLightOff = async item => {
-      await delay()
+      await delay(500)
       this.setState({
         [item]: 0
       })
     }
     const processSequence = async array => {
       for (let el of array) {
-        await delay()
+        await delay(500)
         el = comparisons[el]
         this.setState({
           [el]: 1
@@ -125,10 +125,18 @@ class App extends Component {
         await delayedLightOff(el)
       }
     }
+    const waitForUserInput = async () => {
+      await delay(7000)
+    }
+
     const processSequences = async sequences => {
       for (let sequence of sequences) {
+        this.setState({
+          userSequence: []
+        })
         await delay()
         await processSequence(sequence)
+        await waitForUserInput(sequence)
       }
     }
 
