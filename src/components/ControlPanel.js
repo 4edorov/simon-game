@@ -3,7 +3,8 @@ import {
   Label,
   Well,
   Button,
-  Checkbox
+  Radio,
+  FormGroup
 } from 'react-bootstrap'
 
 const styles = {
@@ -41,6 +42,14 @@ class ControlPanel extends Component {
     this.props.playSequences()
   }
 
+  handleGameSwitcherOn = () => {
+    this.props.onHandleGameSwitcher(true)
+  }
+
+  handleGameSwitcherOff = () => {
+    this.props.onHandleGameSwitcher(false)
+  }
+
   render () {
     return (
       <div className='table-cycle'>
@@ -69,8 +78,10 @@ class ControlPanel extends Component {
           </div>
         </div>
         <div style={styles.row3}>
-          <Checkbox />
-          <h3><Label>On/Off</Label></h3>
+          <FormGroup>
+            <Radio name='radioSwitch' checked={this.props.isGameOn} onChange={this.handleGameSwitcherOn}>On</Radio>
+            <Radio name='radioSwitch' validationState='error' checked={!this.props.isGameOn} onChange={this.handleGameSwitcherOff}>Off</Radio>
+          </FormGroup>
         </div>
       </div>
     )

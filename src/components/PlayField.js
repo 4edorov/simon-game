@@ -48,6 +48,8 @@ class PlayField extends Component {
               <ControlPanel
                 count={this.props.count}
                 playSequences={this.props.playSequences}
+                isGameOn={this.props.isGameOn}
+                onHandleGameSwitcher={this.props.onHandleGameSwitcher}
               />
             </div>
             <div className='square'>

@@ -6,6 +6,8 @@ import {
   comparisons
 } from './libs/libs'
 
+const _ = require('lodash')
+
 const audioContext = new (window.AudioContext || window.webkitAudioCOntext)()
 
 const createAudio = frequency => {
@@ -16,10 +18,10 @@ const createAudio = frequency => {
   return oscillator
 }
 
-const tl = createAudio(440)
-const tr = createAudio(340)
-const bl = createAudio(240)
-const br = createAudio(140)
+const tl = createAudio(300)
+const tr = createAudio(250)
+const bl = createAudio(200)
+const br = createAudio(150)
 
 class App extends Component {
   constructor(props) {
@@ -29,7 +31,9 @@ class App extends Component {
       handleTopRight: 0,
       handleBottomLeft: 0,
       handleBottomRight: 0,
-      count: 0
+      count: 0,
+      userSequence: [],
+      isGameOn: false
     }
   }
 
@@ -67,36 +71,62 @@ class App extends Component {
     this.setState({
       handleTopLeft: handleTopLeft
     })
+    if (handleTopLeft) {
+      this.setState(prevState => ({
+        userSequence: [...prevState.userSequence, '0']
+      }))
+    }
   }
   handleTopRightButton = handleTopRight => {
     this.setState({
       handleTopRight: handleTopRight
     })
+    if (handleTopRight) {
+      this.setState(prevState => ({
+        userSequence: [...prevState.userSequence, '1']
+      }))
+    }
   }
   handleBottomLeftButton = handleBottomLeft => {
     this.setState({
       handleBottomLeft: handleBottomLeft
     })
+    if (handleBottomLeft) {
+      this.setState(prevState => ({
+        userSequence: [...prevState.userSequence, '2']
+      }))
+    }
   }
   handleBottomRightButton = handleBottomRight => {
     this.setState({
       handleBottomRight: handleBottomRight
     })
+    if (handleBottomRight) {
+      this.setState(prevState => ({
+        userSequence: [...prevState.userSequence, '3']
+      }))
+    }
+  }
+
+  handleGameSwitcher = gameState => {
+    this.setState({
+      isGameOn: gameState
+    })
   }
 
   playSequences = () => {
-    const delay = () => {
-      return new Promise(resolve => setTimeout(resolve, 700))
+    const delay = time => {
+      return new Promise(resolve => setTimeout(resolve, time))
     }
     const delayedLightOff = async item => {
-      await delay()
+      await delay(500)
       this.setState({
         [item]: 0
       })
     }
     const processSequence = async array => {
       for (let el of array) {
-        await delay()
+        await delay(500)
         el = comparisons[el]
         this.setState({
           [el]: 1
@@ -104,10 +134,31 @@ class App extends Component {
         await delayedLightOff(el)
       }
     }
+    const waitForUserInput = async sequence => {
+      await delay(7000)
+      if (_.isEqual(this.state.userSequence, sequence)) {
+        console.log('sequence is equal')
+        this.setState(prevState => ({
+          count: prevState.count + 1
+        }))
+      } else {
+        console.log('sequence is not equal')
+        this.setState({
+          userSequence: []
+        })
+        await processSequence(sequence)
+        await waitForUserInput(sequence)
+      }
+    }
+
     const processSequences = async sequences => {
       for (let sequence of sequences) {
+        this.setState({
+          userSequence: []
+        })
         await delay()
         await processSequence(sequence)
+        await waitForUserInput(sequence)
       }
     }
 
@@ -127,6 +178,8 @@ class App extends Component {
         bottomRightState={this.state.handleBottomRight}
         count={this.state.count}
         playSequences={this.playSequences}
+        isGameOn={this.state.isGameOn}
+        onHandleGameSwitcher={this.handleGameSwitcher}
       />
     )
   }
