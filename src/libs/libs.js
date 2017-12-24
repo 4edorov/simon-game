@@ -1,10 +1,3 @@
-const sequences = [
-  ['0'],
-  ['0', '3'],
-  ['0', '3', '2'],
-  ['0', '3', '2', '1']
-]
-
 const comparisons = {
   '0': 'handleTopLeft',
   '1': 'handleTopRight',
@@ -13,6 +6,5 @@ const comparisons = {
 }
 
 module.exports = {
-  sequences,
   comparisons
 }

@@ -28,8 +28,13 @@ const styles = {
     alignItems: 'center'
   },
   countWell: {
-    padding: '5px',
-    marginBottom: '0px'
+    fontFamily: 'Roboto, sans-serif',
+    padding: '0px 5px',
+    marginBottom: '0px',
+    backgroundColor: 'YellowGreen',
+    color: 'Green',
+    height: '30px',
+    fontSize: '21px',
   },
   btn: {
     height: '30px',
@@ -73,7 +78,9 @@ class ControlPanel extends Component {
         </div>
         <div style={styles.row2}>
           <div style={styles.row2El}>
-            <Well style={styles.countWell}>{this.props.count}</Well>
+            <Well style={styles.countWell}>
+              {this.props.isMessage || this.props.count}
+            </Well>
             <h3><Label>Count</Label></h3>
           </div>
           <div style={styles.row2El}>

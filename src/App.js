@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PlayField from './components/PlayField'
 import './App.css'
 import {
-  sequences,
   comparisons
 } from './libs/libs'
 
@@ -18,10 +17,10 @@ const createAudio = frequency => {
   return oscillator
 }
 
-const tl = createAudio(300)
-const tr = createAudio(250)
-const bl = createAudio(200)
-const br = createAudio(150)
+const tl = createAudio(415)
+const tr = createAudio(310)
+const bl = createAudio(209)
+const br = createAudio(252)
 
 class App extends Component {
   constructor(props) {
@@ -34,7 +33,8 @@ class App extends Component {
       count: 0,
       userSequence: [],
       isGameOn: false,
-      isStrictMode: false
+      isStrictMode: false,
+      isMessage: ''
     }
   }
 
@@ -151,17 +151,45 @@ class App extends Component {
       await delay(7000)
       if (_.isEqual(this.state.userSequence, sequence)) {
         console.log('sequence is equal')
+        this.setState({
+          isMessage: 'right!'
+        })
+        await delay(500)
+        this.setState({
+          isMessage: ''
+        })
         this.setState(prevState => ({
           count: prevState.count + 1
         }))
       } else {
         console.log('sequence is not equal')
         this.setState({
+          isMessage: 'wrong!'
+        })
+        await delay(500)
+        this.setState({
+          isMessage: ''
+        })
+        this.setState({
           userSequence: []
         })
         await processSequence(sequence)
         await waitForUserInput(sequence)
       }
+    }
+
+    const randomFormSequences = () => {
+      const addRandomValue = initialArr => {
+        initialArr.push(_.random(3).toString())
+        return initialArr
+      }
+      let initArr = [[]]
+      let sequences = []
+      Array(20).fill(0).forEach((value, index) => {
+        initArr[index] = [].concat(addRandomValue([].concat(initArr[Math.max(index - 1, 0)])))
+        sequences[index] = initArr[index]
+      })
+      return sequences
     }
 
     const processSequences = async sequences => {
@@ -175,6 +203,7 @@ class App extends Component {
       }
     }
 
+    const sequences = randomFormSequences()
     processSequences(sequences)
   }
 
@@ -195,6 +224,7 @@ class App extends Component {
         onHandleGameSwitcher={this.handleGameSwitcher}
         switchStrictMode={this.handleSwitchStrictMode}
         isStrictMode={this.state.isStrictMode}
+        isMessage={this.state.isMessage}
       />
     )
   }
