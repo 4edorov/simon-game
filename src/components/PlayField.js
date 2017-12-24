@@ -50,6 +50,9 @@ class PlayField extends Component {
                 playSequences={this.props.playSequences}
                 isGameOn={this.props.isGameOn}
                 onHandleGameSwitcher={this.props.onHandleGameSwitcher}
+                switchStrictMode={this.props.switchStrictMode}
+                isStrictMode={this.props.isStrictMode}
+                isMessage={this.props.isMessage}
               />
             </div>
             <div className='square'>
@@ -58,12 +61,14 @@ class PlayField extends Component {
                   className={this.props.topLeftState ? 'top-left on' : 'top-left off'}
                   onMouseDown={this.handleOnMouseDownButton}
                   onMouseUp={this.handleOnMouseUpButton}
+                  onMouseLeave={this.handleOnMouseUpButton}
                 >
                 </div>
                 <div
                   className={this.props.topRightState ? 'top-right on' : 'top-right off'}
                   onMouseDown={this.handleOnMouseDownButton}
                   onMouseUp={this.handleOnMouseUpButton}
+                  onMouseLeave={this.handleOnMouseUpButton}
                 >
                 </div>
               </div>
@@ -72,12 +77,14 @@ class PlayField extends Component {
                   className={this.props.bottomLeftState ? 'bottom-left on' : 'bottom-left off'}
                   onMouseDown={this.handleOnMouseDownButton}
                   onMouseUp={this.handleOnMouseUpButton}
+                  onMouseLeave={this.handleOnMouseUpButton}
                 >
                 </div>
                 <div
                   className={this.props.bottomRightState ? 'bottom-right on' : 'bottom-right off'}
                   onMouseDown={this.handleOnMouseDownButton}
                   onMouseUp={this.handleOnMouseUpButton}
+                  onMouseLeave={this.handleOnMouseUpButton}
                 >
                 </div>
               </div>
