@@ -148,8 +148,36 @@ class App extends Component {
       }
     }
     const waitForUserInput = async sequence => {
-      await delay(7000)
-      if (_.isEqual(this.state.userSequence, sequence)) {
+      const checkNumberUserInput = async goalNumber => {
+        if (this.state.userSequence.length < goalNumber) {
+          await delay(1500)
+          await checkNumberUserInput(goalNumber)
+        } else {
+          await delay(1500)
+        }
+      }
+
+      await checkNumberUserInput(sequence.length)
+
+      const test = _.isEqual(this.state.userSequence, sequence)
+      if (!test && this.state.isStrictMode) {
+        console.log('sequence is not equal')
+        this.setState({
+          isMessage: 'wrong!'
+        })
+        await delay(500)
+        this.setState({
+          isMessage: 'restart'
+        })
+        await delay(500)
+        this.setState({
+          isMessage: '',
+          count: 0
+        })
+        return false
+      }
+
+      if (test) {
         console.log('sequence is equal')
         this.setState({
           isMessage: 'right!'
@@ -161,6 +189,7 @@ class App extends Component {
         this.setState(prevState => ({
           count: prevState.count + 1
         }))
+        return true
       } else {
         console.log('sequence is not equal')
         this.setState({
@@ -168,11 +197,10 @@ class App extends Component {
         })
         await delay(500)
         this.setState({
-          isMessage: ''
-        })
-        this.setState({
+          isMessage: '',
           userSequence: []
         })
+
         await processSequence(sequence)
         await waitForUserInput(sequence)
       }
@@ -193,17 +221,25 @@ class App extends Component {
     }
 
     const processSequences = async sequences => {
+      let isBreak = false
       for (let sequence of sequences) {
         this.setState({
           userSequence: []
         })
-        await delay()
+        await delay(500)
         await processSequence(sequence)
-        await waitForUserInput(sequence)
+        const userResult = await waitForUserInput(sequence)
+        if (!userResult) {
+          console.log('break')
+          isBreak = true
+          break
+        }
       }
+      isBreak && this.playSequences()
     }
 
-    const sequences = randomFormSequences()
+    const sequences = [].concat(randomFormSequences())
+    console.log('sequences', sequences)
     processSequences(sequences)
   }
 
