@@ -3,6 +3,9 @@ import ControlPanel from './ControlPanel'
 
 class PlayField extends Component {
   handleOnMouseDownButton = (e) => {
+    if (!this.isAllPlayButtonOff()) {
+      return
+    }
     switch (e.target.className) {
       case 'top-left off':
         this.props.onHandleTopLeftButton(1)
@@ -39,6 +42,13 @@ class PlayField extends Component {
     }
   }
 
+  isAllPlayButtonOff = () => {
+    if (this.props.topLeftState || this.props.topRightState || this.props.bottomLeftState || this.props.bottomRightState) {
+      return false
+    }
+    return true
+  }
+
   render() {
     return (
       <div className='app'>
@@ -53,6 +63,8 @@ class PlayField extends Component {
                 switchStrictMode={this.props.switchStrictMode}
                 isStrictMode={this.props.isStrictMode}
                 isMessage={this.props.isMessage}
+                onHandleGameStart={this.props.onHandleGameStart}
+                isGameStart={this.props.isGameStart}
               />
             </div>
             <div className='square'>
