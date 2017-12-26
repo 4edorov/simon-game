@@ -34,6 +34,7 @@ class App extends Component {
       userSequence: [],
       isGameOn: false,
       isStrictMode: false,
+      isGameStart: false,
       isMessage: ''
     }
   }
@@ -116,7 +117,8 @@ class App extends Component {
     if (!gameState) {
       this.setState({
         isStrictMode: false,
-        count: 0
+        count: 0,
+        isGameStart: false
       })
     }
   }
@@ -127,7 +129,13 @@ class App extends Component {
     }))
   }
 
-  playSequences = () => {
+  handleGameStart = () => {
+    this.setState(prevState => ({
+      isGameStart: !prevState.isGameStart
+    }))
+  }
+
+  playSequences = sequences => {
     const delay = time => {
       return new Promise(resolve => setTimeout(resolve, time))
     }
@@ -148,9 +156,24 @@ class App extends Component {
       }
     }
     const waitForUserInput = async sequence => {
-      await delay(7000)
-      if (_.isEqual(this.state.userSequence, sequence)) {
-        console.log('sequence is equal')
+      const checkNumberUserInput = async goalNumber => {
+        if (this.state.userSequence.length < goalNumber && this.state.isGameOn) {
+          await delay(700)
+          await checkNumberUserInput(goalNumber)
+        } else {
+          await delay(700)
+        }
+      }
+
+      await checkNumberUserInput(sequence.length)
+
+      if (!this.state.isGameOn) {
+        return false
+      }
+
+      const test = _.isEqual(this.state.userSequence, sequence)
+
+      if (test) {
         this.setState({
           isMessage: 'right!'
         })
@@ -161,20 +184,32 @@ class App extends Component {
         this.setState(prevState => ({
           count: prevState.count + 1
         }))
+        return true
       } else {
-        console.log('sequence is not equal')
         this.setState({
           isMessage: 'wrong!'
         })
         await delay(500)
         this.setState({
-          isMessage: ''
-        })
-        this.setState({
+          isMessage: '',
           userSequence: []
         })
-        await processSequence(sequence)
-        await waitForUserInput(sequence)
+
+        if (this.state.isStrictMode) {
+          await delay(500)
+          this.setState({
+            isMessage: 'restart'
+          })
+          await delay(500)
+          this.setState({
+            isMessage: '',
+            count: 0
+          })
+          return false
+        } else {
+          await processSequence(sequence)
+          await waitForUserInput(sequence)
+        }
       }
     }
 
@@ -193,17 +228,29 @@ class App extends Component {
     }
 
     const processSequences = async sequences => {
+      let isBreak = false
       for (let sequence of sequences) {
+        isBreak = false
         this.setState({
           userSequence: []
         })
-        await delay()
+        await delay(500)
         await processSequence(sequence)
-        await waitForUserInput(sequence)
+        const userResult = await waitForUserInput(sequence)
+        if (userResult === false) {
+          console.log('break')
+          isBreak = true
+          break
+        }
       }
+      isBreak && this.state.isGameOn && this.playSequences(sequences)
     }
 
-    const sequences = randomFormSequences()
+    if (!sequences) {
+      sequences = [].concat(randomFormSequences())
+      console.log('sequences', sequences)
+    }
+
     processSequences(sequences)
   }
 
@@ -225,6 +272,8 @@ class App extends Component {
         switchStrictMode={this.handleSwitchStrictMode}
         isStrictMode={this.state.isStrictMode}
         isMessage={this.state.isMessage}
+        onHandleGameStart={this.handleGameStart}
+        isGameStart={this.state.isGameStart}
       />
     )
   }

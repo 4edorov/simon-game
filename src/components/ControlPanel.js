@@ -44,14 +44,15 @@ const styles = {
 
 class ControlPanel extends Component {
   handleStartButton = () => {
-    if (!this.props.isGameOn) {
+    if (!this.props.isGameOn || this.props.isGameStart) {
       return
     }
+    this.props.onHandleGameStart()
     this.props.playSequences()
   }
 
   handleStrictButton = () => {
-    if (!this.props.isGameOn) {
+    if (!this.props.isGameOn || this.props.isGameStart) {
       return
     }
     this.props.switchStrictMode()
@@ -87,7 +88,7 @@ class ControlPanel extends Component {
             <Button bsStyle='danger' style={styles.btn}
               onClick={this.handleStartButton}
             />
-            <h3><Label>Start</Label></h3>
+            <h3><Label bsStyle={this.props.isGameStart ? 'success' : 'default'}>Start</Label></h3>
           </div>
           <div style={styles.row2El}>
             <Button bsStyle='warning' style={styles.btn}
