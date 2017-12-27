@@ -32,7 +32,7 @@ class App extends Component {
       handleTopRight: 0,
       handleBottomLeft: 0,
       handleBottomRight: 0,
-      count: 0,
+      count: ' ',
       userSequence: [],
       isGameOn: false,
       isStrictMode: false,
@@ -118,18 +118,19 @@ class App extends Component {
 
   handleGameSwitcher = gameState => {
     this.setState({
-      isGameOn: gameState
+      isGameOn: gameState,
+      count: 1
     })
     if (!gameState) {
       breakSequences = true
       setTimeout(() => {
         this.setState({
           isStrictMode: false,
-          count: 0,
+          count: ' ',
           isMessage: '',
           isGameStart: false
         })
-      }, 1000)
+      }, 0)
     }
   }
 
@@ -161,7 +162,7 @@ class App extends Component {
           break
         }
 
-        await delay(250)
+        await delay(350)
 
         el = comparisons[el]
         this.setState({
@@ -220,7 +221,7 @@ class App extends Component {
           await delay(500)
           this.setState({
             isMessage: '',
-            count: 0
+            count: 1
           })
           return false
         } else {
@@ -262,12 +263,14 @@ class App extends Component {
         }
       }
 
-      breakSequences && this.state.isGameOn && this.playSequences(sequences)
-
-      if (!breakSequences && this.state.isGameOn) {
-        this.setState({
-          isMessage: 'win!!!'
-        })
+      if (this.state.isGameOn) {
+        if (breakSequences) {
+          this.playSequences(sequences)
+        } else {
+          this.setState({
+            isMessage: 'win!!!'
+          })
+        }
       }
     }
 
