@@ -22,6 +22,8 @@ const tr = createAudio(310)
 const bl = createAudio(209)
 const br = createAudio(252)
 
+let breakSequences
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -56,15 +58,19 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.handleTopLeft) {
+      tl.connect(audioContext.destination)
       tl.disconnect(audioContext.destination)
     }
     if (prevState.handleTopRight) {
+      tr.connect(audioContext.destination)
       tr.disconnect(audioContext.destination)
     }
     if (prevState.handleBottomLeft) {
+      bl.connect(audioContext.destination)
       bl.disconnect(audioContext.destination)
     }
     if (prevState.handleBottomRight) {
+      br.connect(audioContext.destination)
       br.disconnect(audioContext.destination)
     }
   }
@@ -115,11 +121,15 @@ class App extends Component {
       isGameOn: gameState
     })
     if (!gameState) {
-      this.setState({
-        isStrictMode: false,
-        count: 0,
-        isGameStart: false
-      })
+      breakSequences = true
+      setTimeout(() => {
+        this.setState({
+          isStrictMode: false,
+          count: 0,
+          isMessage: '',
+          isGameStart: false
+        })
+      }, 1000)
     }
   }
 
@@ -141,18 +151,25 @@ class App extends Component {
     }
     const delayedLightOff = async item => {
       await delay(500)
-      this.setState({
+      await this.setState({
         [item]: 0
       })
     }
     const processSequence = async array => {
       for (let el of array) {
-        await delay(500)
+        if (breakSequences) {
+          break
+        }
+
+        await delay(250)
+
         el = comparisons[el]
         this.setState({
           [el]: 1
         })
-        await delayedLightOff(el)
+        if (!breakSequences) {
+          await delayedLightOff(el)
+        }
       }
     }
     const waitForUserInput = async sequence => {
@@ -175,7 +192,7 @@ class App extends Component {
 
       if (test) {
         this.setState({
-          isMessage: 'right!'
+          isMessage: 'right'
         })
         await delay(500)
         this.setState({
@@ -187,7 +204,7 @@ class App extends Component {
         return true
       } else {
         this.setState({
-          isMessage: 'wrong!'
+          isMessage: 'wrong'
         })
         await delay(500)
         this.setState({
@@ -198,7 +215,7 @@ class App extends Component {
         if (this.state.isStrictMode) {
           await delay(500)
           this.setState({
-            isMessage: 'restart'
+            isMessage: 'reset'
           })
           await delay(500)
           this.setState({
@@ -228,9 +245,8 @@ class App extends Component {
     }
 
     const processSequences = async sequences => {
-      let isBreak = false
       for (let sequence of sequences) {
-        isBreak = false
+        breakSequences = false
         this.setState({
           userSequence: []
         })
@@ -238,17 +254,25 @@ class App extends Component {
         await processSequence(sequence)
         const userResult = await waitForUserInput(sequence)
         if (userResult === false) {
-          console.log('break')
-          isBreak = true
+          breakSequences = true
+          break
+        }
+        if (breakSequences) {
           break
         }
       }
-      isBreak && this.state.isGameOn && this.playSequences(sequences)
+
+      breakSequences && this.state.isGameOn && this.playSequences(sequences)
+
+      if (!breakSequences && this.state.isGameOn) {
+        this.setState({
+          isMessage: 'win!!!'
+        })
+      }
     }
 
     if (!sequences) {
       sequences = [].concat(randomFormSequences())
-      console.log('sequences', sequences)
     }
 
     processSequences(sequences)
