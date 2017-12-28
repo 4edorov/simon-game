@@ -75,6 +75,7 @@ class PlayField extends Component {
                   onMouseUp={this.handleOnMouseUpButton}
                   onMouseLeave={this.handleOnMouseUpButton}
                   onTouchStart={this.handleOnMouseDownButton}
+                  onTouchEnd={this.handleOnMouseUpButton}
                 >
                 </div>
                 <div
@@ -83,6 +84,7 @@ class PlayField extends Component {
                   onMouseUp={this.handleOnMouseUpButton}
                   onMouseLeave={this.handleOnMouseUpButton}
                   onTouchStart={this.handleOnMouseDownButton}
+                  onTouchEnd={this.handleOnMouseUpButton}
                 >
                 </div>
               </div>
@@ -93,6 +95,7 @@ class PlayField extends Component {
                   onMouseUp={this.handleOnMouseUpButton}
                   onMouseLeave={this.handleOnMouseUpButton}
                   onTouchStart={this.handleOnMouseDownButton}
+                  onTouchEnd={this.handleOnMouseUpButton}
                 >
                 </div>
                 <div
@@ -101,6 +104,7 @@ class PlayField extends Component {
                   onMouseUp={this.handleOnMouseUpButton}
                   onMouseLeave={this.handleOnMouseUpButton}
                   onTouchStart={this.handleOnMouseDownButton}
+                  onTouchEnd={this.handleOnMouseUpButton}
                 >
                 </div>
               </div>
